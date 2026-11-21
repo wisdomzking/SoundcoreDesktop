@@ -1,0 +1,62 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Generate Windows shell (if missing)
+        run: |
+          if (-not (Test-Path windows)) {
+            flutter create --platforms=windows .
+          }
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Build Windows release
+        run: flutter build windows --release
+
+      - name: Package EXE with runtime DLLs
+        run: |
+          $src = "build\windows\x64\runner\Release"
+          $out = "SoundcoreDesktop-win"
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+          Copy-Item -Path "$src\*" -Destination $out -Recurse -Force
+          Compress-Archive -Path "$out\*" -DestinationPath "SoundcoreDesktop-Windows.zip" -Force
+
+      - name: List output
+        run: Get-ChildItem -Path "SoundcoreDesktop-Windows.zip" | Select-Object Name, Length
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: soundcore-desktop-windows
+          path: SoundcoreDesktop-Windows.zip
+          if-no-files-found: error
+          retention-days: 30
