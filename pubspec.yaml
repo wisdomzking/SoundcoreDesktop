@@ -1,0 +1,40 @@
+name: soundcore_desktop
+description: "Soundcore Desktop - offline transcription tool for Anker recording files."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # File import (Windows desktop)
+  file_selector: ^1.1.0
+  path_provider: ^2.1.5
+  path: ^1.9.1
+
+  # Audio playback (just_audio + Windows backend via media_kit)
+  just_audio: ^0.10.6
+  just_audio_media_kit: ^2.1.0
+  media_kit_libs_windows_audio: ^1.0.9
+
+  # STT engines (pure Dart HTTP)
+  http: ^1.6.0
+
+  # State
+  provider: ^6.1.5+1
+
+  # Share / open external
+  share_plus: ^13.2.0
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
