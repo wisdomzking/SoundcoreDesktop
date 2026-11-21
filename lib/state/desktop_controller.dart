@@ -97,7 +97,7 @@ class DesktopController extends ChangeNotifier {
   late final SonioxSttService _soniox = SonioxSttService();
   late final MossSttService _moss = MossSttService();
 
-  static const _indexFile = 'transcription_index.json';
+  static const _indexFileName = 'transcription_index.json';
   Directory? _workDir;
 
   Future<void> initialize() async {
@@ -163,7 +163,7 @@ class DesktopController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<File> _indexFile() async => File(p.join(_workDir!.path, _indexFile));
+  Future<File> _indexFile() async => File(p.join(_workDir!.path, _indexFileName));
 
   Future<void> _loadIndex() async {
     try {
